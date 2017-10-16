@@ -25,7 +25,7 @@ defineSupportCode(({Given, When, Then}) => {
     passwordInput.keys(password)
 });
 
-  When(/^I fill register with (.*) and (.*) and (.*) and (.*) and (.*) and (.*) and (.*)$/ , (name, familyName, email, Universidad, department, password, terms) => {
+  When(/^I fill register with (.*) and (.*) and (.*) and (.*) and (.*)$/ , (name, familyName, email, password, terms) => {
     var cajaSignUp = browser.element('.cajaSignUp');
     var nameInput = cajaSignUp.element('input[name="nombre"]');
     nameInput.click();
@@ -43,7 +43,9 @@ defineSupportCode(({Given, When, Then}) => {
     passwordInput.click();
     passwordInput.keys(password)
     
-   
+    var terminos = cajaSignUp.element('[type="checkbox"]');
+    if (terms=="true")
+       terminos.click();
   });
 
   When('I try to login', () => {
@@ -62,13 +64,16 @@ defineSupportCode(({Given, When, Then}) => {
     expect(alertText).to.include(error);
 });
 
+  Then('I expect to display {string}', error => {
+    browser.waitForVisible('.sweet-alert', 5000);
+    var alertText = browser.element('.sweet-alert').getText();
+    expect(alertText).to.include(error);
+  });
+
   Then('I expect redirect to home page', () => {
     browser.waitForVisible('#cuenta', 5000);  
     expect(browser.isVisible('#cuenta')).to.be.true; 
 });
 
-Then('I be able to see validation message', () =>{
-    //var validate = browser.element('.loginForm').element('.has-error');
-    expect(browser.isExisting('.has-error')).to.be.true; 
-  });
+
 });
